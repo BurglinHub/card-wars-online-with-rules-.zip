@@ -23,8 +23,8 @@ Then open `http://localhost:8000`.
 
 ## Publish free with GitHub Pages
 
-1. Create a GitHub repository. If card-image permissions are uncertain, keep the repository private; for a public fan project, first confirm you may publish it.
-2. Upload the contents of this folder to the repository root (`index.html`, `style.css`, `src/`, and `data/`).
+1. GitHub Pages on GitHub Free requires a public repository. Before publishing, confirm you may publicly use the linked card artwork; if not, do not publish this fan project there.
+2. Upload all files from this folder directly to the repository root. Keep `index.html`, `style.css`, `app.js`, `catalog.json`, `peerjs.min.js`, and `rules.html` side by side.
 3. In **Settings → Pages**, select **Deploy from a branch**, choose `main` and `/ (root)`, then save.
 4. Open the HTTPS Pages URL. The host creates a room and shares the six-character code; friends open that same URL and enter the code. Nobody installs anything.
 

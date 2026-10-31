@@ -1,4 +1,4 @@
-import catalogData from '../data/catalog.json' with { type: 'json' };
+import catalogData from './catalog.json' with { type: 'json' };
 
 const $ = (s) => document.querySelector(s);
 const byId = (id) => document.getElementById(id);
