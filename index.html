@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#132d2c" />
+  <meta name="description" content="Браузерный стол Card Wars для игры с друзьями." />
+  <title>Card Wars · Online Table</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="./style.css" />
+  <script src="./vendor/peerjs.min.js" defer></script>
+  <script type="module" src="./src/app.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Card Wars home">
+        <span class="brand-mark" aria-hidden="true">CW</span>
+        <span><strong>CARD WARS</strong><small>ONLINE TABLE</small></span>
+      </a>
+      <a class="rules-link" href="./rules.html">Правила</a>
+      <div id="connection-pill" class="connection-pill"><span class="status-dot"></span><span id="connection-label">Не в комнате</span></div>
+    </header>
+
+    <main>
+      <section id="lobby" class="lobby view">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow">БРАУЗЕРНЫЙ СТОЛ · БЕЗ УСТАНОВКИ</p>
+            <h1>Играй вместе.<br><em>Из любой точки.</em></h1>
+            <p class="intro">Откройте одну ссылку, создайте комнату и пригласите друзей. Карты из загруженного TTS-сейва доступны в коллекции.</p>
+            <div class="collection-summary"><span class="summary-icon">▤</span><span><b id="collection-count">Загрузка коллекции…</b><small>карты отображаются с исходных листов из сейва</small></span></div>
+          </div>
+          <div class="table-art" aria-label="Иллюстрация игровой поверхности">
+            <div class="table-ring ring-one"></div><div class="table-ring ring-two"></div>
+            <div class="art-card art-card-a"><span>ADVENTURE</span><b>TIME</b></div>
+            <div class="art-card art-card-b"><span>ICE</span><b>KING</b></div>
+            <div class="art-card art-card-c"><span>FINN</span><b>&amp; JAKE</b></div>
+            <div class="table-stamp">THE<br>TABLE<br><small>IS YOURS</small></div>
+          </div>
+        </div>
+
+        <div class="lobby-grid">
+          <section class="panel create-panel">
+            <div class="panel-heading"><div><p class="eyebrow">НАЧАТЬ ИГРУ</p><h2>Создать комнату</h2></div><span class="step-badge">01</span></div>
+            <label class="field-label" for="host-name">Твоё имя за столом</label>
+            <input id="host-name" class="text-input" maxlength="20" placeholder="Например, Finn" value="Игрок 1" />
+            <button id="create-room" class="button button-primary button-full"><span>Создать бесплатную комнату</span><span aria-hidden="true">↗</span></button>
+            <p class="microcopy">Комната работает, пока вкладка создателя открыта.</p>
+          </section>
+          <section class="panel join-panel">
+            <div class="panel-heading"><div><p class="eyebrow">УЖЕ ЕСТЬ КОД?</p><h2>Войти к друзьям</h2></div><span class="step-badge step-muted">02</span></div>
+            <label class="field-label" for="join-name">Твоё имя</label>
+            <input id="join-name" class="text-input" maxlength="20" placeholder="Например, Marceline" value="Игрок 2" />
+            <label class="field-label" for="room-code">Код комнаты</label>
+            <div class="join-row"><input id="room-code" class="text-input room-code-input" maxlength="6" placeholder="ABC123" autocomplete="off" /><button id="join-room" class="button button-dark">Войти <span aria-hidden="true">→</span></button></div>
+            <p class="microcopy">Никакой регистрации и скачивания.</p>
+          </section>
+        </div>
+        <div class="notice-row"><span class="notice-icon">i</span><span>Это цифровой стол для свободной игры: перемещайте карты вручную. Сейв не содержит текста правил, поэтому автоматического судьи правил здесь пока нет.</span></div>
+        <p id="lobby-error" class="error-message" role="alert" hidden></p>
+      </section>
+
+      <section id="game" class="game view" hidden>
+        <div class="game-topline">
+          <div><p class="eyebrow">ИГРОВАЯ КОМНАТА</p><h1>Стол друзей</h1></div>
+          <div class="room-share"><span class="room-label">КОД КОМНАТЫ</span><strong id="room-code-display">------</strong><button id="copy-code" class="icon-button" aria-label="Скопировать код" title="Скопировать код">▣</button></div>
+          <button id="leave-room" class="button button-quiet">Покинуть стол</button>
+        </div>
+
+        <div class="game-layout">
+          <aside class="side-panel">
+            <section class="panel player-panel">
+              <div class="panel-heading compact"><div><p class="eyebrow">ЗА СТОЛОМ</p><h2>Игроки <span id="player-count" class="count-badge">1</span></h2></div></div>
+              <div id="players-list" class="players-list"></div>
+            </section>
+            <section class="panel deck-panel">
+              <div class="panel-heading compact"><div><p class="eyebrow">ТВОЯ КОЛОДА</p><h2>Выбрать пачку</h2></div></div>
+              <label class="sr-only" for="deck-select">Выбери колоду</label>
+              <select id="deck-select" class="text-input deck-select"></select>
+              <button id="use-deck" class="button button-primary button-full">Перемешать и взять</button>
+              <div class="deck-status"><span class="deck-stack" aria-hidden="true">▤</span><span><b id="my-deck-count">Колода не выбрана</b><small id="my-deck-name">Выбери пачку выше</small></span></div>
+              <button id="draw-card" class="button button-dark button-full" disabled>Взять карту <span aria-hidden="true">↓</span></button>
+              <p class="microcopy">Карта из колоды попадает только в твою руку.</p>
+            </section>
+            <section class="panel turn-panel">
+              <div class="turn-info"><span class="turn-orb"></span><span><small>СЕЙЧАС ХОДИТ</small><b id="turn-player">—</b></span></div>
+              <button id="end-turn" class="button button-quiet button-full">Передать ход →</button>
+              <div class="score-control"><span>Мой счёт</span><div class="score-buttons"><button id="score-minus" aria-label="Уменьшить счёт">−</button><b id="my-score">0</b><button id="score-plus" aria-label="Увеличить счёт">+</button></div></div>
+            </section>
+            <button id="reset-game" class="text-button" hidden>Сбросить стол</button>
+          </aside>
+
+          <section class="table-column">
+            <div class="table-toolbar"><div><span class="live-dot"></span><span>ОБЩИЙ СТОЛ</span></div><span id="table-count" class="table-count">0 карт на поле</span></div>
+            <div id="play-area" class="play-area" aria-label="Игровое поле. Перетащи сюда карту из руки.">
+              <div id="empty-board" class="empty-board"><span class="empty-symbol">✳</span><b>Стол ждёт первой карты</b><small>Перетащи карту сюда или нажми «Сыграть»</small></div>
+              <div id="board-cards" class="board-cards"></div>
+            </div>
+            <div class="discard-row"><div class="discard-heading"><span><span class="discard-icon">↘</span> Сброс</span><small id="discard-count">0 карт</small></div><div id="discard-pile" class="discard-pile"><span class="discard-empty">Сброшенные карты появятся здесь</span></div></div>
+            <div class="hand-section"><div class="hand-heading"><div><p class="eyebrow">ТВОЯ ЗОНА</p><h2>Рука <span id="hand-count" class="count-badge">0</span></h2></div><span class="hand-tip">Карты в руке видны только тебе</span></div><div id="hand-cards" class="hand-cards"><div class="hand-empty">Возьми колоду и добери карту, чтобы начать.</div></div></div>
+            <details class="activity-panel"><summary>Журнал стола <span id="log-count">0</span></summary><ol id="activity-log" class="activity-log"></ol></details>
+          </section>
+        </div>
+      </section>
+    </main>
+    <footer class="footer"><span>Неофициальный браузерный фан-стол · не связан с правообладателями</span><span>Играйте честно, вручную ✦</span></footer>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <dialog id="card-dialog" class="card-dialog"><button id="close-card" class="dialog-close" aria-label="Закрыть">×</button><div id="dialog-card-art" class="dialog-card-art"></div><div id="dialog-card-title" class="dialog-card-title"></div></dialog>
+</body>
+</html>
